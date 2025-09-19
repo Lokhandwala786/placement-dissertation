@@ -234,27 +234,7 @@ def calendar_view(request):
         upcoming_visits = scheduled_visits.filter(visit_date__gte=timezone.now()).count()
         completed_visits = scheduled_visits.filter(completed=True).count()
         
-        # Add some sample data if no visits exist (for testing)
-        if not visits_data:
-            # Create sample calendar data for demonstration
-            sample_date = timezone.now() + timezone.timedelta(days=7)
-            visits_data = [{
-                'id': 'sample-1',
-                'title': 'Sample Visit - Demo Company',
-                'start': sample_date.isoformat(),
-                'end': (sample_date + timezone.timedelta(hours=1)).isoformat(),
-                'allDay': False,
-                'extendedProps': {
-                    'student': f"{student_profile.user.first_name} {student_profile.user.last_name}",
-                    'company': 'Demo Company',
-                    'purpose': 'Initial Meeting',
-                    'tutor': 'Sample Tutor',
-                    'notes': 'This is a sample visit for demonstration purposes',
-                    'completed': False,
-                    'location': 'Demo Location',
-                    'job_title': 'Sample Position'
-                }
-            }]
+        # No sample data - show empty calendar
         
         context = {
             'visits_data': json.dumps(visits_data),

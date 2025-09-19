@@ -221,8 +221,18 @@ def placement_records(request):
     
     # Apply filters
     status_filter = request.GET.get('status')
+    search_query = request.GET.get('search')
+    
     if status_filter:
         placements = placements.filter(status=status_filter)
+    
+    if search_query:
+        placements = placements.filter(
+            Q(student__user__first_name__icontains=search_query) |
+            Q(student__user__last_name__icontains=search_query) |
+            Q(company_name__icontains=search_query) |
+            Q(job_title__icontains=search_query)
+        )
     
     # Pagination
     paginator = Paginator(placements, 15)
@@ -230,8 +240,10 @@ def placement_records(request):
     page_obj = paginator.get_page(page_number)
     
     context = {
+        'placements': page_obj,  # Changed from page_obj to placements
         'page_obj': page_obj,
         'status_filter': status_filter,
+        'search_query': search_query,
         'status_choices': PlacementRequest.STATUS_CHOICES,
     }
     return render(request, 'tutors/placement_records.html', context)

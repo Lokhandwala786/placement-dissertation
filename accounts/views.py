@@ -55,7 +55,7 @@ def register_student(request):
             try:
                 user = form.save()
                 login(request, user)
-                messages.success(request, 'Student registration successful! Welcome to the platform.')
+                messages.success(request, 'Student registration successful.')
                 return redirect('students:dashboard')
             except Exception as e:
                 logger.error(f"Student registration error: {str(e)}")

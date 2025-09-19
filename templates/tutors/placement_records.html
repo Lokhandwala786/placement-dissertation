@@ -20,6 +20,46 @@
                 </div>
             </div>
 
+            <!-- Filter Form -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="search" class="form-label">Search</label>
+                            <input type="text" name="search" id="search" class="form-control" 
+                                   placeholder="Search by name, company..." value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">Filter by Status</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                {% for value, label in status_choices %}
+                                    <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter me-2"></i>Apply Filter
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <a href="{% url 'tutors:placement_records' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Clear Filter
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Placements List -->
             {% if placements %}
                 <div class="row">

@@ -134,7 +134,7 @@ class BaseRegistrationForm(UserCreationForm):
         return cleaned_data
 
 class StudentRegistrationForm(BaseRegistrationForm):
-    """Enhanced student registration form"""
+    """student registration form"""
     
     student_id = forms.CharField(
         max_length=20, 
@@ -173,7 +173,7 @@ class StudentRegistrationForm(BaseRegistrationForm):
     tutor = forms.ModelChoiceField(
         queryset=TutorProfile.objects.filter(user__is_active=True),
         required=False,
-        empty_label="Choose your tutor (optional)",
+        empty_label="Choose your tutor",
         widget=forms.Select(attrs={
             'class': 'form-select',
             'placeholder': 'Choose your tutor'

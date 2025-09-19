@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Visit - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-calendar-plus me-2"></i>Schedule Visit
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Placement Information -->
+                    <div class="alert alert-light mb-4">
+                        <h6 class="text-muted mb-2">Placement Details</h6>
+                        <p class="mb-1"><strong>Student:</strong> {{ placement_request.student.user.get_full_name }}</p>
+                        <p class="mb-1"><strong>Company:</strong> {{ placement_request.company_name }}</p>
+                        <p class="mb-0"><strong>Job Title:</strong> {{ placement_request.job_title }}</p>
+                    </div>
+
+                    <!-- Schedule Form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="visit_date" class="form-label">Visit Date & Time <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" 
+                                           class="form-control" 
+                                           id="visit_date" 
+                                           name="visit_date" 
+                                           required
+                                           min="{{ today|date:'Y-m-d' }}T{{ now|time:'H:i' }}">
+                                    <div class="form-text">Select date and time for the visit</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="duration" class="form-label">Duration (Hours)</label>
+                                    <select class="form-select" id="duration" name="duration">
+                                        <option value="1">1 Hour</option>
+                                        <option value="2" selected>2 Hours</option>
+                                        <option value="3">3 Hours</option>
+                                        <option value="4">4 Hours</option>
+                                        <option value="5">5 Hours</option>
+                                        <option value="6">6 Hours</option>
+                                        <option value="8">8 Hours (Full Day)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="purpose" class="form-label">Visit Purpose <span class="text-danger">*</span></label>
+                            <select class="form-select" id="purpose" name="purpose" required>
+                                <option value="">Select purpose...</option>
+                                <option value="initial_visit">Initial Visit - First meeting</option>
+                                <option value="progress_check">Progress Check - Mid-term review</option>
+                                <option value="final_evaluation">Final Evaluation - End of placement</option>
+                                <option value="issue_resolution">Issue Resolution - Problem solving</option>
+                                <option value="training_session">Training Session - Skill development</option>
+                                <option value="other">Other - Specify in notes</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control" 
+                                      id="notes" 
+                                      name="notes" 
+                                      rows="4" 
+                                      placeholder="Add any additional notes, special instructions, or details about this visit..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="send_notification" name="send_notification" checked>
+                                <label class="form-check-label" for="send_notification">
+                                    Send email notification to student
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'tutors:placement_records' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-check me-2"></i>Schedule Visit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set minimum date to today
+    const today = new Date();
+    const minDate = today.toISOString().slice(0, 16);
+    document.getElementById('visit_date').min = minDate;
+    
+    // Set default date to tomorrow at 10 AM
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(10, 0, 0, 0);
+    document.getElementById('visit_date').value = tomorrow.toISOString().slice(0, 16);
+    
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const visitDate = new Date(document.getElementById('visit_date').value);
+        const now = new Date();
+        
+        if (visitDate <= now) {
+            e.preventDefault();
+            alert('Visit date must be in the future!');
+            return false;
+        }
+        
+        const purpose = document.getElementById('purpose').value;
+        if (!purpose) {
+            e.preventDefault();
+            alert('Please select a visit purpose!');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

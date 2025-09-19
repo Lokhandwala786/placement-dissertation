@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 def role_required(allowed_roles):
     """
     Decorator to check if user has required role
-    Usage: @role_required(['student', 'tutor'])
+    Usage: @role_required(['student', 'tutor','provider'])
     """
     def decorator(view_func):
         @wraps(view_func)

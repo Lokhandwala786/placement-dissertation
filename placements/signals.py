@@ -65,14 +65,10 @@ def notify_provider_new_request(placement_request):
 def notify_status_change(placement_request):
     """Notify relevant parties of status change"""
     try:
-        old_status = placement_request.tracker.previous('status')
         new_status = placement_request.status
         
-        if old_status == new_status:
-            return  # No status change
-            
         # Determine notification type based on status change
-        if new_status == 'approved':
+        if new_status == 'approved_by_tutor':
             notify_student_approved(placement_request)
         elif new_status == 'rejected':
             notify_student_rejected(placement_request)
